@@ -48,7 +48,7 @@ class DataLoader:
         self.num_samples = num_samples
         self.rows = rows
         self.columns = columns
-        self.data = self.load_data()
+        self.data, self.labels = self.load_data()
 
     def load_data(self):
         """
@@ -74,7 +74,11 @@ class DataLoader:
                             data[activity_idx - 1, subject_idx - 1, sample_idx - 1, i] = list(
                                 map(float, line.split(',')))
         data = np.reshape(data, (self.num_activities * self.num_subjects * self.num_samples, self.rows, self.columns))
-        return data
+
+        # store the corresponding label
+        labels = np.repeat(np.arange(1, 20), self.num_subjects * self.num_samples)
+
+        return data, labels
 
     def get_sample(self, activity_idx, subject_idx, sample_idx):
         """
@@ -144,3 +148,32 @@ class DataLoader:
         data_before_projections = self._get_modified_data_solution_b_before_projection()
         pca.fit(data_before_projections)
         return pca.transform(data_before_projections)
+
+    def get_splitted_data(self, solution_a=False, n_components=0.95):
+        if solution_a:
+            temp_data = self.get_modified_data_solution_a()
+        else:
+            temp_data = self.get_modified_data_solution_b(n_components)
+
+        x_train = np.zeros((self.num_activities * self.num_subjects * (self.num_samples - 12), temp_data.shape[1]))
+        y_train = np.zeros((self.num_activities * self.num_subjects * (self.num_samples - 12), ))
+        train_idx = 0
+
+        x_test = np.zeros((self.num_activities * self.num_subjects * 12, temp_data.shape[1]))
+        y_test = np.zeros((self.num_activities * self.num_subjects * 12, ))
+        test_idx = 0
+
+        for activity_idx in range(0, self.num_activities):
+            for subject_idx in range(0, self.num_subjects):
+                offset = (activity_idx * 8 * 60) + (subject_idx * 8)
+
+                x_train[train_idx:train_idx + 48, :] = temp_data[offset: offset + 48, :]
+                y_train[train_idx:train_idx + 48] = activity_idx + 1
+                train_idx += 48
+
+                offset += 48
+                x_test[test_idx:test_idx + 12, :] = temp_data[offset: offset + 12, :]
+                y_test[test_idx:test_idx + 12] = activity_idx + 1
+                test_idx += 12
+
+        return x_train, y_train, x_test, y_test
