@@ -3,15 +3,22 @@ import math
 
 
 class Evaluator:
-    def __init__(self, true_labels, clusters):
+    def __init__(self, true_labels, assignment_points_to_clusters):
         self.true_labels = true_labels
-        self.clusters = clusters
+        self.clusters = self._partition_clusters(assignment_points_to_clusters)
         self.true_positive = 0.0
         self.true_negative = 0.0
         self.false_positive = 0.0
         self.false_negative = 0.0
-        self.confusion_matrix = np.zeros((len(clusters), np.max(true_labels) + 1))
+        self.confusion_matrix = np.zeros((len(self.clusters), np.max(true_labels) + 1))
         self.compute()
+
+    def _partition_clusters(self, assignment):
+        clusters = [[] for _ in range(max(assignment) + 1)]
+        for i in range(len(assignment)):
+            clusters[assignment[i]].append(i)
+
+        return clusters
 
     def compute(self):
         for i in range(len(self.clusters)):
