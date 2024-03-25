@@ -10,20 +10,20 @@ class Evaluator:
         self.true_negative = 0.0
         self.false_positive = 0.0
         self.false_negative = 0.0
-        self.confusion_matrix = np.zeros((len(self.clusters), np.max(true_labels) + 1))
+        self.confusion_matrix = np.zeros((len(self.clusters), int(np.max(true_labels)) + 1))
         self.compute()
 
     def _partition_clusters(self, assignment):
         clusters = [[] for _ in range(max(assignment) + 1)]
         for i in range(len(assignment)):
-            clusters[assignment[i]].append(i)
+            clusters[int(assignment[i])].append(i)
 
         return clusters
 
     def compute(self):
         for i in range(len(self.clusters)):
             for j in range(len(self.clusters[i])):
-                self.confusion_matrix[i, self.true_labels[self.clusters[i][j]]] += 1
+                self.confusion_matrix[i, int(self.true_labels[int(self.clusters[i][j])])] += 1
 
         for i in range(self.confusion_matrix.shape[0]):
             for j in range(self.confusion_matrix.shape[1]):
@@ -76,3 +76,7 @@ class Evaluator:
                                             math.log2(self.confusion_matrix[i, j] / n_elements_in_cluster))
 
         return conditional_entropy
+
+    def computer_accuracy(self):
+        return ((self.true_positive + self.true_negative) /
+                (self.true_positive + self.true_negative + self.false_positive + self.false_negative))

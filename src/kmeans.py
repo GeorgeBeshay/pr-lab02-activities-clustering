@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class KmeansClustering:
-    def __init__(self, k=8, max_iterations=500, random_state=None):
+    def __init__(self, k=8, max_iterations=500, random_state=42):
         self.clusters = None
         self.centroids = None
         self.k = k
@@ -31,7 +31,13 @@ class KmeansClustering:
         return np.argmin(distances, axis=0)
 
     def _compute_new_centroids(self, X, new_assignment):
-        return np.array([X[new_assignment == i].mean(axis=0) for i in range(self.k)])
+        centers = []
+        for i in range(self.k):
+            if np.sum(new_assignment == i) == 0:
+                centers.append(X[np.random.choice(X.shape[0])])
+            else:
+                centers.append(X[new_assignment == i].mean(axis=0))
+        return np.array(centers)
 
     def predict(self, X):
         return self._assignment(X)
