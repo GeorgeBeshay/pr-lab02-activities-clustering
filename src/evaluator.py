@@ -16,7 +16,8 @@ class Evaluator:
     def _partition_clusters(self, assignment):
         clusters = [[] for _ in range(max(assignment) + 1)]
         for i in range(len(assignment)):
-            clusters[int(assignment[i])].append(i)
+            if int(assignment[i]) != -1:
+                clusters[int(assignment[i])].append(i)
 
         return clusters
 
