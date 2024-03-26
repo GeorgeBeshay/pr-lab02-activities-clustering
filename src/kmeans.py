@@ -1,8 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class KmeansClustering:
-    def __init__(self, k=8, max_iterations=500, random_state=None):
+    def __init__(self, k=8, max_iterations=500, random_state=42):
         self.clusters = None
         self.centroids = None
         self.k = k
@@ -15,15 +16,13 @@ class KmeansClustering:
 
         for i in range(self.max_iterations):
 
-            self.clusters = self._assignment(X)
-            new_centroids = self._compute_new_centroids(X)
+            new_assignment = self._assignment(X)
+            new_centroids = self._compute_new_centroids(X, new_assignment)
 
             if np.allclose(self.centroids, new_centroids):
                 break
 
             self.centroids = new_centroids
-
-        return self.clusters
 
     def _assignment(self, X):
         centroids_with_new_axis = self.centroids[:, np.newaxis]
@@ -31,12 +30,14 @@ class KmeansClustering:
         distances = np.sqrt((difference_points_centroids ** 2).sum(axis=2))
         return np.argmin(distances, axis=0)
 
-    def _compute_new_centroids(self, X):
-        return np.array([X[self.clusters == i].mean(axis=0) for i in range(self.k)])
+    def _compute_new_centroids(self, X, new_assignment):
+        centers = []
+        for i in range(self.k):
+            if np.sum(new_assignment == i) == 0:
+                centers.append(X[np.random.choice(X.shape[0])])
+            else:
+                centers.append(X[new_assignment == i].mean(axis=0))
+        return np.array(centers)
 
     def predict(self, X):
-        centroids_with_new_axis = self.centroids[:, np.newaxis]
-        difference_points_centroids = X - centroids_with_new_axis
-        distances = np.sqrt((difference_points_centroids ** 2).sum(axis=2))
-        return np.argmin(distances, axis=0)
-
+        return self._assignment(X)
