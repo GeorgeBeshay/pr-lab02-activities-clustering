@@ -30,6 +30,7 @@ def show_evaluation(evaluators: List[Evaluator], model_names: List[str]):
     num_plots = num_metrics // 2 + num_metrics % 2  # Calculate the number of plots based on metrics
 
     fig, axes = plt.subplots(nrows=num_plots, ncols=2, figsize=(18, num_plots * 10))
+    fig.suptitle("Different Models Evaluation", fontsize=32)
 
     for idx, column in enumerate(df.columns):
         row_idx = idx // 2
