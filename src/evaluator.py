@@ -16,8 +16,8 @@ class Evaluator:
     def _partition_clusters(self, assignment):
         clusters = [[] for _ in range(max(assignment) + 1)]
         for i in range(len(assignment)):
-            if int(assignment[i]) != -1:
-                clusters[int(assignment[i])].append(i)
+            # if int(assignment[i]) != -1:
+            clusters[int(assignment[i])].append(i)
 
         return clusters
 
@@ -79,5 +79,8 @@ class Evaluator:
         return conditional_entropy
 
     def computer_accuracy(self):
+        if (self.true_positive + self.true_negative + self.false_positive + self.false_negative) == 0:
+            return 0.0
+
         return ((self.true_positive + self.true_negative) /
                 (self.true_positive + self.true_negative + self.false_positive + self.false_negative))
