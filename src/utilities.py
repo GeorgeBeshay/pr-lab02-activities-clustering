@@ -1,3 +1,4 @@
+import numpy as np
 from evaluator import Evaluator
 from tabulate import tabulate
 from typing import List
@@ -30,7 +31,6 @@ def show_evaluation(evaluators: List[Evaluator], model_names: List[str]):
     num_plots = num_metrics // 2 + num_metrics % 2  # Calculate the number of plots based on metrics
 
     fig, axes = plt.subplots(nrows=num_plots, ncols=2, figsize=(18, num_plots * 10))
-    fig.suptitle("Different Models Evaluation", fontsize=32)
 
     for idx, column in enumerate(df.columns):
         row_idx = idx // 2
@@ -44,3 +44,16 @@ def show_evaluation(evaluators: List[Evaluator], model_names: List[str]):
     axes[num_plots-1, 1].axis('off')
     plt.tight_layout()
     plt.show()
+
+
+def filter_dbscan_clusters(clusters_indices: np.ndarray):
+    max_cluster_idx = np.max(clusters_indices)
+    new_cluster_idx = max_cluster_idx + 1
+
+    for i in range(len(clusters_indices)):
+        if clusters_indices[i] == -1:
+            clusters_indices[i] = 0
+        else:
+            clusters_indices[i] = 1
+
+    return clusters_indices

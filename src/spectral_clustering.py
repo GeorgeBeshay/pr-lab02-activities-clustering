@@ -1,10 +1,7 @@
-import numpy as np
-from kernel_functions import *
-import math
 from scipy.linalg import norm
-from sklearn.cluster import KMeans
 from kmeans import KmeansClustering
 from kernel_functions import *
+
 
 class SpectralClustering:
     def __init__(self, kernel_function=compute_nn_similarity, n_clusters=19):
