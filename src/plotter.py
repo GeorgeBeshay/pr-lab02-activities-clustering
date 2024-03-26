@@ -4,16 +4,18 @@ from tabulate import tabulate
 
 class Plotter:
     def __init__(self, k_values, precision_scores, recall_scores,
-                 f1_scores, conditional_entropy_scores, accuracy_scores):
+                 f1_scores, conditional_entropy_scores, accuracy_scores, title):
         self.k_values = k_values
         self.precision_scores = precision_scores
         self.recall_scores = recall_scores
         self.f1_scores = f1_scores
         self.conditional_entropy_scores = conditional_entropy_scores
         self.accuracy_scores = accuracy_scores
+        self.title = title
 
     def plot_scores(self):
         fig, axs = plt.subplots(3, 2, figsize=(15, 15))
+        fig.suptitle(self.title, fontsize=32)
 
         axs[0, 0].plot(self.k_values, self.precision_scores, marker='o')
         axs[0, 0].set_title('Precision Scores')
