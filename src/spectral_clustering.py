@@ -3,7 +3,7 @@ from kernel_functions import *
 import math
 from scipy.linalg import norm
 from sklearn.cluster import KMeans
-from Kmeans import KmeansClustering
+from kmeans import KmeansClustering
 from kernel_functions import *
 
 class SpectralClustering:
@@ -13,6 +13,7 @@ class SpectralClustering:
         self.eigenvalues = None
         self.kernel_function = kernel_function
         self.n_clusters = n_clusters
+        self.n_connected_components = None
 
     def fit(self, D):
         A = self.kernel_function(D)
@@ -29,7 +30,7 @@ class SpectralClustering:
         eigenvalues = np.real(unsorted_eigenvalues[sorted_indices])
         eigenvectors = np.real(unsorted_eigenvectors[:, sorted_indices])
 
-        constant_eigenvectors_count = np.count_nonzero(eigenvalues < 1e-12)
+        self.n_connected_components = np.count_nonzero(eigenvalues < 1e-12)
         selected_indices = eigenvalues > 1e-12
         selected_eigenvalues = eigenvalues[selected_indices]
         selected_eigenvectors = eigenvectors[selected_indices]
@@ -45,10 +46,6 @@ class SpectralClustering:
         self.Y = Y
 
     def predict(self):
-        # kmeans_builtin = KMeans(self.n_clusters)
-        # kmeans_builtin.fit(self.Y)
-        # clusters_identified = kmeans_builtin.labels_
-
         kmeans = KmeansClustering(self.n_clusters)
         kmeans.fit(self.Y)
         clusters_identified = kmeans.predict(self.Y)
