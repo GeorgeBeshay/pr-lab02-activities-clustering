@@ -75,10 +75,10 @@ class Evaluator:
             for j in range(self.confusion_matrix.shape[1]):
                 if self.confusion_matrix[i, j] != 0:
 
-                    conditional_entropy -= ((self.confusion_matrix[i, j] / n_elements_in_cluster) *
+                    conditional_entropy -= (self.confusion_matrix[i, j] *
                                             math.log2(self.confusion_matrix[i, j] / n_elements_in_cluster))
 
-        return conditional_entropy
+        return conditional_entropy / np.sum(self.confusion_matrix)
 
     def computer_accuracy(self):
         if (self.true_positive + self.true_negative + self.false_positive + self.false_negative) == 0:
