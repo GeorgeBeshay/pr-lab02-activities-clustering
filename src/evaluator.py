@@ -14,7 +14,7 @@ class Evaluator:
         self.compute()
 
     def _partition_clusters(self, assignment):
-        clusters = [[] for _ in range(max(assignment) + 1)]
+        clusters = [[] for _ in range(int(max(assignment)) + 1)]
         for i in range(len(assignment)):
             if int(assignment[i]) == -1:
                 raise ValueError("The cluster index can not be -1")
