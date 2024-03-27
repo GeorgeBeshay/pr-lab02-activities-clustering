@@ -26,6 +26,10 @@ The "Daily and Sports Activity" dataset contains motion sensor data collected fr
 - **plotter.py**: Module for visualizing clustering results.
 - **utilities.py**: Utility functions used in the analysis.
 
+## Results
+![alt text](src/images/models_evlauation.png)
+![Spectral Clustering and KMeans Maximum Samples Identified Per Cluster](src/images/kmeans_spectral.png)
+
 ## Authors
 - [Mariam Aziz](https://github.com/MariamAziz0)
 - [Makario Michel](https://github.com/Mak-Michel)
