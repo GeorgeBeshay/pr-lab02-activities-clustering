@@ -85,3 +85,38 @@ def filter_dbscan_clusters(clusters_indices: np.ndarray):
             new_cluster_idx += 1
 
     return clusters_indices
+
+
+def compare_detected_clusters(evaluators: List[Evaluator], model_names: List[str]):
+    selected_models_indices = [1, 3, 5, 7]
+    evaluators = [evaluators[i] for i in selected_models_indices]
+    model_names = [model_names[i] for i in selected_models_indices]
+
+    headers = [f'Samples Identified In Cluster {i}' for i in range(1, 20)]
+    clusters_identified = np.zeros((len(evaluators), 19))
+
+    for model_idx, model_name in enumerate(model_names):
+        temp_conf = evaluators[model_idx].confusion_matrix
+        max_clusters = np.max(temp_conf, axis=0)
+        if max_clusters.shape[0] > 19:
+            max_clusters = np.delete(max_clusters, 0)
+
+        clusters_identified[model_idx] = max_clusters
+
+    plt.figure(figsize=(14, 6))
+    for row in clusters_identified:
+        plt.plot(range(len(row)), row)
+
+    # Add labels and title
+    plt.xlabel('Activity Index')
+    plt.ylabel('Samples Identified Per Activity')
+    plt.title('Samples Identified Per Activity overall Models')
+    plt.xticks(range(0, 19))
+    plt.grid(True)
+
+    # Add legend indicating row number
+    plt.legend(model_names)
+
+    # Show the plot
+    plt.show()
+
