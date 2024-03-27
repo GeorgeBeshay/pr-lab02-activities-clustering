@@ -84,10 +84,4 @@ def filter_dbscan_clusters(clusters_indices: np.ndarray):
             clusters_indices[i] = new_cluster_idx
             new_cluster_idx += 1
 
-    # for i in range(len(clusters_indices)):
-    #     if clusters_indices[i] == -1:
-    #         clusters_indices[i] = 0
-    #     else:
-    #         clusters_indices[i] = 1
-
     return clusters_indices
